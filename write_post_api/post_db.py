@@ -1,10 +1,11 @@
+import os
 import mysql.connector
 
 posts_db = mysql.connector.connect(
-    host="localhost",
-    user="postservice",
-    password="postspassword",
-    database="posts"
+    host=os.getenv("MYSQL_HOST"),
+    user=os.getenv("MYSQL_USER"),
+    password=os.getenv("MYSQL_PASSWORD"),
+    database=os.getenv("MYSQL_DATABASE")
 )
 
 def get_posts_db():

@@ -2,7 +2,7 @@ import datetime
 import os
 import mysql.connector
 from typing import Optional
-from fastapi import Cookie, FastAPI, Request
+from fastapi import Cookie, FastAPI, HTTPException, Request
 from pydantic import BaseModel
 from jose import jwt
 
@@ -34,16 +34,19 @@ async def get_posts():
 async def write_post(post: Post, request: Request):
 
     userJWT = request.cookies.get('jwtCookie') or request.headers.get('jwtCookie')
+    
 
     # Check if token is valid
     if userJWT is None:
-        return {"error": "No JWT provided"}
+        raise HTTPException(status_code=401, detail="No JWT provided")
     
-    if jwt.decode(userJWT, jwt_secret, algorithms=["HS256"]) is None:
-        return {"error": "Invalid token"}
-    
-    token_info = jwt.decode(userJWT, jwt_secret, algorithms=["HS256"])
-    
+    try:
+        token_info = jwt.decode(userJWT, jwt_secret, algorithms=["HS256"])
+    except jwt.ExpiredSignatureError:
+        raise HTTPException(status_code=401, detail="JWT expired")
+    except jwt.JWTError:
+        raise HTTPException(status_code=401, detail="Invalid JWT")
+
     # Check if user is valid
     if token_info['sub'] != post.user:
         return {"error": "Invalid user"} 
