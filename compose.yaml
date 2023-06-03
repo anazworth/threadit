@@ -1,0 +1,76 @@
+services:
+
+  auth-db:
+    image: mariadb:latest
+    environment:
+      - MARIADB_ROOT_PASSWORD=rootpassword
+      - MARIADB_DATABASE=auth
+      - MARIADB_USER=authservice
+      - MARIADB_PASSWORD=authpasword
+    # ports:
+      # - 3306:3306
+
+  auth-service:
+    build: ./auth_server/auth-service
+    ports:
+      - 8080:8080
+    depends_on:
+      - auth-db
+
+  read-db:
+    image: mongo
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=readapiadmin
+      - MONGO_INITDB_ROOT_PASSWORD=adminpassword
+    ports:
+      - 27017:27017
+
+  post-cache:
+    image: redis/redis-stack
+    ports:
+      - 6379:6379
+    command: redis-server --requirepass adminpassword --loadmodule /opt/redis-stack/lib/rejson.so
+
+  post-db:
+    image: mysql:8.0.33
+    ports:
+      - 3306:3306
+    environment:
+      - MYSQL_ROOT_PASSWORD=rootpassword
+      - MYSQL_DATABASE=posts
+      - MYSQL_USER=postservice
+      - MYSQL_PASSWORD=postspassword
+
+  post-queue:
+    image: rabbitmq:3
+    ports:
+      - 5672:5672
+      - 15672:15672
+    command: rabbitmq-server
+
+  read-post-api:
+    build: ./read_post_api/
+    ports:
+      - 8081:8081
+    environment:
+      - MONGO_URI=mongodb://readapiadmin:adminpassword@read-db
+      - DB=posts
+      - REDIS_URI=post-cache:6379
+      - REDIS_PASSWORD=adminpassword
+      - QUEUE_URI=post-queue
+    depends_on:
+      - read-db
+      - post-cache
+      - post-queue
+    restart: unless-stopped
+
+  read-db-helper:
+    image: mongo-express
+    ports:
+      - 8082:8081
+    environment:
+      - ME_CONFIG_MONGODB_ADMINUSERNAME=readapiadmin
+      - ME_CONFIG_MONGODB_ADMINPASSWORD=adminpassword
+      - ME_CONFIG_MONGODB_URL=mongodb://readapiadmin:adminpassword@read-db:27017
+    depends_on:
+      - read-db
