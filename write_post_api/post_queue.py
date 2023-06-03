@@ -1,3 +1,4 @@
+import os
 import pika
 
 def send_post_to_queue(post):
@@ -5,8 +6,8 @@ def send_post_to_queue(post):
     post_to_bytes = post.json().encode('utf-8')
 
     connection = pika.BlockingConnection(
-        pika.ConnectionParameters('localhost'))
+        pika.ConnectionParameters(os.getenv('QUEUE_HOST')))
     channel = connection.channel()
-    channel.queue_declare(queue='posts')
-    channel.basic_publish(exchange='', routing_key='posts', body=post_to_bytes)
+    channel.queue_declare(queue=os.getenv('QUEUE_NAME'))
+    channel.basic_publish(exchange='', routing_key=os.getenv('QUEUE_NAME'), body=post_to_bytes)
     connection.close()

@@ -74,3 +74,20 @@ services:
       - ME_CONFIG_MONGODB_URL=mongodb://readapiadmin:adminpassword@read-db:27017
     depends_on:
       - read-db
+
+  write-post-api:
+    build: ./write_post_api/
+    ports: 
+      - 8000:8000
+    environment:
+      - MYSQL_HOST=post-db
+      - MYSQL_USER=postservice
+      - MYSQL_PASSWORD=postspassword
+      - MYSQL_DATABASE=posts
+      - QUEUE_HOST=post-queue
+      - QUEUE_NAME=posts
+      - JWT_SECRET=thisismydogcurryssecretkeywhydoesitneedtobesolong
+    depends_on:
+      - post-db
+      - post-queue
+    restart: unless-stopped
