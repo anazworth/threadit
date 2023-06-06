@@ -91,3 +91,17 @@ services:
       - post-db
       - post-queue
     restart: unless-stopped
+
+  loadbalancer:
+    build: ./loadbalancer/
+    volumes:
+      - ./loadbalancer/nginx.conf:/etc/nginx/nginx.conf:ro
+    ports:
+      - 8888:80
+    environment:
+      - NGINX_HOST=localhost
+      - NGINX_PORT=80
+    depends_on:
+      - write-post-api
+      - read-post-api
+      - auth-service
