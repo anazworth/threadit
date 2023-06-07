@@ -11,7 +11,7 @@ import lombok.ToString;
 @Entity
 @ToString
 public class User {
-    
+
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     @Getter
