@@ -4,7 +4,7 @@ import http from 'k6/http'
 // See https://k6.io/docs/using-k6/options
 export const options = {
   stages: [
-    { duration: '1m', target: 20000 },
+    { duration: '1m', target: 2000 },
     // { duration: '3m', target: 5000 },
     // { duration: '1m', target: 10000 },
   ],
@@ -15,7 +15,7 @@ export const options = {
 }
 
 export default function main() {
-  let getPost = http.get(`http://localhost:8081/api/v1/read/121`)
+  let getPost = http.get(`http://localhost:8081/api/v1/read/1`)
   sleep(1)
   // let username = Math.random().toString(36).slice(-8)
   // let password = Math.random().toString(36).slice(-8)
