@@ -26,7 +26,6 @@ export function initDB() {
 }
 
 export function saveVote(vote: Vote) {
-    console.log(vote);
     return new Promise((resolve, reject) => {
         // Check if the user has already voted on this post
         // If they have, update the vote
@@ -36,11 +35,11 @@ export function saveVote(vote: Vote) {
         connection.query(
             "SELECT * FROM votes WHERE post_id = ? AND username = ?",
             [vote.post_id, vote.username],
-            (err, result) => {
+            (err, result: any) => {
                 if (err) {
                     reject(err);
                 } else {
-                    if ((<any>result).length > 0) {
+                    if (result.length > 0) {
                         if (result[0].vote === vote.vote) {
                             // If the user is trying to vote the same way they did before, nullify their vote
                             vote.vote = 0;
@@ -75,7 +74,7 @@ export function saveVote(vote: Vote) {
     });
 }
 
-export function getVotesByPostID(post_id) {
+export function getVotesByPostID(post_id: string): Promise<{}> {
     return new Promise((resolve, reject) => {
         connection.query(
             "SELECT SUM(vote) AS total FROM votes WHERE post_id = ?",
@@ -84,7 +83,7 @@ export function getVotesByPostID(post_id) {
                 if (err) {
                     reject(err);
                 } else {
-                    resolve(result);
+                    resolve(result as {});
                 }
             }
         );

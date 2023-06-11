@@ -48,6 +48,12 @@ services:
       - 15672:15672
     command: rabbitmq-server
 
+  vote-cache:
+    image: redis/redis-stack
+    ports:
+      - 6340:6379
+    command: redis-server --requirepass adminpassword --loadmodule /opt/redis-stack/lib/rejson.so
+
   votes-db:
     image: mysql:8.0.33
     ports:

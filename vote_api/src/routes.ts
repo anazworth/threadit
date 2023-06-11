@@ -4,6 +4,7 @@ import express from "express";
 import cookieParser from "cookie-parser";
 import { saveVote, getVotesByPostID } from "./votesDB";
 import log from "./utils/logger";
+import * as votesCache from "./votesCache";
 
 const verifyUser = require("./utils/verifyUser");
 import verifyVote from "./utils/verifyVote";
@@ -11,30 +12,61 @@ import verifyVote from "./utils/verifyVote";
 function routes(app: Express) {
     app.use(express.json());
 
+    app.get("/api/v1/redis", (req, res) => {
+        const vote: Vote = {
+            post_id: 1,
+            username: "test",
+            vote: 4,
+        };
+
+        votesCache.saveVote(vote.post_id.toString(), vote.vote);
+
+        votesCache.getVotesByPostID(vote.post_id.toString()).then((result) => {
+            res.status(200).send(result);
+        });
+    });
+
     app.route("/api/v1/votes");
 
-    app.get("/api/v1/votes/:id", (req: Request, res: Response) => {
+    app.get("/api/v1/votes/:id", async (req: Request, res: Response) => {
         const id = req.params.id;
 
-        // Check the cache for the post_id and return it
+        const cachedTotal = await votesCache.getVotesByPostID(id)
 
-        const votes = getVotesByPostID(id)
+        if (cachedTotal) {
+            console.log("cachehit")
+            res.status(200).send(cachedTotal);
+            return
+        }
+
+        getVotesByPostID(id)
             .catch((err) => {
                 console.log(err);
                 res.status(500).send("Internal Server Error");
             })
-            .then((result) => {
+            .then((result: any) => {
                 res.status(200).send(result);
+                const total = result[0]["total"];
+                if (total === undefined || total === null) {
+                    return;
+                }
+                votesCache.saveVote(id, total)
             });
 
-        // Add the post_id to the cache if it doesn't exist
+        // if (!cachedTotal && res.locals.total !== undefined) {
+        //     console.log("cache miss")
+        //     console.log(res.locals.total, "res.locals.total")
+        //     const total = Number(res.locals.total)
+        //     console.log(total)
+        //     votesCache.saveVote(id, total)
+        // }
     });
 
     app.use(cookieParser());
     app.use(verifyUser);
     app.use(verifyVote);
 
-    app.post("/api/v1/votes", (req, res) => {
+    app.post("/api/v1/votes", async (req, res) => {
         const vote: Vote = res.locals.vote;
 
         saveVote(vote)
@@ -47,7 +79,13 @@ function routes(app: Express) {
             });
 
         // Check the cache for the post_id and update it
-    });
+            //
+        const totalVotes: any = await getVotesByPostID(vote.post_id.toString())
+        
+        votesCache.saveVote(vote.post_id.toString(), totalVotes[0]["total"])
+        });
+        
+
 }
 
 export default routes;
