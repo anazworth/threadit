@@ -7,7 +7,7 @@ import Cookies from "js-cookie";
 export default function Navbar() {
   const [loginFormDisplay, setLoginFormDisplay] = useState(false);
 
-  let value = localStorage.getItem("username");
+  let value = typeof window !== 'undefined' ? localStorage.getItem("username") : null;
   const [username, setUsername] = useState(value ? value : "");
 
   const [loggedIn, setLoggedIn] = useState(value ? true : false);
@@ -40,16 +40,34 @@ export default function Navbar() {
         sessionStorage.setItem("username", res.data.username);
 
         setLoggedIn(true);
+        window.location.reload();
       })
       .catch((err) => {
         console.log(err);
       });
   }
+  interface Props {
+    children: React.ReactNode;
+  }
+
+  const ClientOnly: React.FC<Props> = ({ children, ...delegated }) => {
+    const [hasMounted, setHasMounted] = useState(false);
+
+    useEffect(() => {
+      setHasMounted(true);
+    }, []);
+
+    if (!hasMounted) {
+      return null;
+    }
+
+    return <div {...delegated}>{children}</div>;
+  };
 
   function loginform() {
     return (
       <form
-        className="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4"
+        className="flex flex-col text-black sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4"
         onSubmit={onSubmit}
       >
         <input
@@ -81,24 +99,41 @@ export default function Navbar() {
   return (
     <div className="flex flex-row w-full justify-between p-2 bg-white">
       <div className="flex flex-row ">
-        <button className="text-2xl">Threadit</button>
-      </div>
-      <div className="flex flex-col outline">
-        {loggedIn && <div className="flex flex-row">hello o</div>}
-        <div>karma</div>
-        <div>{username}</div>
+        <button className="text-2xl text-black">Threadit</button>
       </div>
       <div className="flex flex-row">
-        {loginFormDisplay && loginform()}
+        <div>
+          <ClientOnly>
+            {loginFormDisplay && loginform()}
 
-        {!loginFormDisplay && (
-          <button
-            className="rounded-md py-2 px-4 bg-orange-400"
-            onClick={handleLogin}
-          >
-            Login
-          </button>
-        )}
+            {!loginFormDisplay && !loggedIn && (
+              <button
+                className="rounded-md py-2 px-4 bg-orange-400"
+                onClick={handleLogin}
+              >
+                Login
+              </button>
+            )}
+            {username && (
+              <div className="space-x-4">
+                <button className="rounded-md py-2 px-4 text-black text-md bg-white">
+                  {username}
+                </button>
+                <button
+                  className="rounded-md py-2 px-4 bg-orange-400"
+                  onClick={() => {
+                    localStorage.removeItem("username");
+                    localStorage.removeItem("jwt");
+                    sessionStorage.removeItem("username");
+                    setLoggedIn(false);
+                    window.location.reload();
+                  }}>Logout</button>
+
+              </div>
+            )
+            }
+          </ClientOnly>
+        </div>
       </div>
     </div>
   );

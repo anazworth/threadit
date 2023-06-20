@@ -1,0 +1,8 @@
+CREATE TABLE IF NOT EXISTS post (
+    post_id INT NOT NULL PRIMARY KEY,
+    user VARCHAR(255) NOT NULL,
+    topic VARCHAR(255) NOT NULL,
+    title VARCHAR(255) NOT NULL,
+    content VARCHAR(255) NOT NULL,
+    created DATETIME NOT NULL
+)

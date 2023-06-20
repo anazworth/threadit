@@ -56,7 +56,7 @@ async def write_post(post: Post, request: Request):
         return {"error": "Token expired"}
 
     # Add Unix timestamp
-    post.created = str(datetime.datetime.now().timestamp())
+    post.created = str(datetime.datetime.now())
 
     # Add post to database
     try:
@@ -64,7 +64,6 @@ async def write_post(post: Post, request: Request):
     except mysql.connector.Error as err:
         return {"error": err}
     
-    # @TODO
     # Add event to rabbitmq
     str(post.post_id)
     send_post_to_queue(post)

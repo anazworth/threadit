@@ -1,6 +1,7 @@
 package main
 
 import (
+	// "log"
 	"log"
 	"read_post_api/config"
 	"read_post_api/controllers"
@@ -20,21 +21,18 @@ func main() {
 	// RabbitMQ connection
 	config.ConnectRabbitMQ()
 
-	// Declare queue
-	q, err := config.RMQ.Ch.QueueDeclare(
+	msgs, err := config.RMQ.Ch.Consume(
 		"posts",
-		false,
+		"",
+		true,
 		false,
 		false,
 		false,
 		nil,
 	)
 
-	// consume rabbitmq queue
-	msgs, err := config.RMQ.Consume(q.Name)
-
 	if err != nil {
-		log.Println(err)
+		log.Default()
 	}
 
 	go func() {

@@ -5,11 +5,11 @@ import { Vote } from "./types/vote";
 
 const connection = mysql.createPool({
     connectionLimit: 10,
-    host: "127.0.0.1",
-    port: 3307,
-    user: "voteapi",
-    password: "votespassword",
-    database: "votes",
+    host: process.env.MYSQL_HOST,
+    port: Number(process.env.MYSQL_PORT),
+    user: process.env.MYSQL_USER,
+    password: process.env.MYSQL_PASSWORD,
+    database: process.env.MYSQL_DATABASE,
 });
 
 export function initDB() {

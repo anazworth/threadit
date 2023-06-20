@@ -1,0 +1,6 @@
+applicationType: default
+defaultPackage: com.anazworth
+testFramework: junit
+sourceLanguage: kotlin
+buildTool: gradle_kotlin
+features: [ annotation-api, app-name, data, data-jdbc, gradle, h2, http-client, jackson-databind, jdbc-hikari, junit, kotlin, kotlin-application, kotlin-build, kotlin-extension-functions, logback, management, micrometer, micrometer-prometheus, micronaut-build, netty-server, rabbitmq, readme, redis-lettuce, shade, test-resources, yaml ]

@@ -1,12 +1,23 @@
-import { createClient } from 'redis';
+import { createClient } from "redis";
 import { Vote } from "./types/vote";
 import log from "./utils/logger";
 
-const redis = createClient(
-    {
-        url: "redis://default:adminpassword@127.0.0.1:6340",
-    }
-)
+const redisHost = process.env.REDIS_HOST;
+const redisPort = process.env.REDIS_PORT;
+const redisUsername = process.env.REDIS_USERNAME;
+const redisPassword = process.env.REDIS_PASSWORD;
+
+const redis = createClient({
+    url:
+        "redis://" +
+        redisUsername +
+        ":" +
+        redisPassword +
+        "@" +
+        redisHost +
+        ":" +
+        redisPort,
+});
 
 export async function initCache() {
     await redis.connect();
@@ -20,13 +31,12 @@ export async function initCache() {
 // });
 
 export async function saveVote(post_id: string, total: number) {
-    await redis.set(post_id, total)
-    console.log("cached vote", post_id, total)
+    await redis.set(post_id, total);
+    console.log("cached vote", post_id, total);
 }
 
 export async function getVotesByPostID(post_id: string) {
-    const cachedTotal = await redis.get(post_id)
-    console.log("cached total from getVotesByPost", cachedTotal)
-    return cachedTotal
+    const cachedTotal = await redis.get(post_id);
+    console.log("cached total from getVotesByPost", cachedTotal);
+    return cachedTotal;
 }
-

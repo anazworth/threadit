@@ -8,6 +8,10 @@ def send_post_to_queue(post):
     connection = pika.BlockingConnection(
         pika.ConnectionParameters(os.getenv('QUEUE_HOST')))
     channel = connection.channel()
-    channel.queue_declare(queue=os.getenv('QUEUE_NAME'))
-    channel.basic_publish(exchange='', routing_key=os.getenv('QUEUE_NAME'), body=post_to_bytes)
+    channel.exchange_declare(exchange=os.getenv('QUEUE_NAME'), exchange_type='fanout')
+    channel.queue_declare(queue="posts")
+    channel.queue_declare(queue="feed")
+    channel.queue_bind(exchange=os.getenv('QUEUE_NAME'), queue="posts")
+    channel.queue_bind(exchange=os.getenv('QUEUE_NAME'), queue="feed")
+    channel.basic_publish(exchange=os.getenv('QUEUE_NAME'), routing_key='', body=post_to_bytes)
     connection.close()

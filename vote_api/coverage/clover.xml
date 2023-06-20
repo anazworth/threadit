@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1686439748037" clover="3.2.0">
-  <project timestamp="1686439748038" name="All files">
-    <metrics statements="28" coveredstatements="28" conditionals="12" coveredconditionals="12" methods="3" coveredmethods="3" elements="43" coveredelements="43" complexity="0" loc="28" ncloc="28" packages="1" files="3" classes="3"/>
+<coverage generated="1686518320291" clover="3.2.0">
+  <project timestamp="1686518320291" name="All files">
+    <metrics statements="28" coveredstatements="26" conditionals="12" coveredconditionals="12" methods="3" coveredmethods="3" elements="43" coveredelements="41" complexity="0" loc="28" ncloc="28" packages="1" files="3" classes="3"/>
     <file name="logger.ts" path="/workspaces/threadit/vote_api/src/utils/logger.ts">
       <metrics statements="2" coveredstatements="2" conditionals="0" coveredconditionals="0" methods="1" coveredmethods="1"/>
       <line num="4" count="2" type="stmt"/>
-      <line num="6" count="7" type="stmt"/>
+      <line num="6" count="8" type="stmt"/>
     </file>
     <file name="verifyUser.ts" path="/workspaces/threadit/vote_api/src/utils/verifyUser.ts">
-      <metrics statements="12" coveredstatements="12" conditionals="2" coveredconditionals="2" methods="1" coveredmethods="1"/>
+      <metrics statements="12" coveredstatements="10" conditionals="2" coveredconditionals="2" methods="1" coveredmethods="1"/>
       <line num="5" count="1" type="stmt"/>
       <line num="7" count="1" type="stmt"/>
       <line num="14" count="3" type="stmt"/>
@@ -16,10 +16,10 @@
       <line num="16" count="1" type="stmt"/>
       <line num="19" count="2" type="stmt"/>
       <line num="20" count="2" type="stmt"/>
-      <line num="21" count="1" type="stmt"/>
-      <line num="22" count="1" type="stmt"/>
-      <line num="24" count="1" type="stmt"/>
-      <line num="25" count="1" type="stmt"/>
+      <line num="21" count="0" type="stmt"/>
+      <line num="22" count="0" type="stmt"/>
+      <line num="24" count="2" type="stmt"/>
+      <line num="25" count="2" type="stmt"/>
       <line num="29" count="1" type="stmt"/>
     </file>
     <file name="verifyVote.ts" path="/workspaces/threadit/vote_api/src/utils/verifyVote.ts">

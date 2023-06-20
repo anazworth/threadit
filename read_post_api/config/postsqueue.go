@@ -1,9 +1,8 @@
 package config
 
 import (
-	"os"
-
 	amqp "github.com/rabbitmq/amqp091-go"
+	"os"
 )
 
 type RabbitMQ struct {
@@ -26,6 +25,36 @@ func ConnectRabbitMQ() {
 	if err != nil {
 		panic(err)
 	}
+
+	err = ch.ExchangeDeclare(
+		"posts",
+		"fanout",
+		false,
+		false,
+		false,
+		false,
+		nil,
+	)
+
+	// Declare queue
+	q, err := ch.QueueDeclare(
+		"posts",
+		false,
+		false,
+		false,
+		false,
+		nil,
+	)
+
+	println("Queue name: " + q.Name)
+
+	err = ch.QueueBind(
+		"posts",
+		"posts",
+		"posts",
+		false,
+		nil,
+	)
 
 	RMQ = RabbitMQ{
 		Conn: conn,
