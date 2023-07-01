@@ -25,9 +25,9 @@ datasources:
 #    schema-generate: CREATE_DROP
     dialect: MYSQL
     driverClassName: com.mysql.cj.jdbc.Driver
-#    url: jdbc:mysql://localhost:3308/posts
-#    username: feedservice
-#    password: feedpassword
+    url: ${FEED_DB_URL:`jdbc:mysql://localhost:3308/posts`}
+    username: ${FEED_DB_USERNAME:`feedservice`}
+    password: ${FEED_DB_PASSWORD:`feedpassword`}
 
 flyway:
   datasources:
@@ -40,7 +40,7 @@ netty:
   default:
     allocator:
       max-order: 3
-redis.uri: redis://localhost
+redis.uri: ${FEED_CACHE_URL:`redis://localhost`}
 
 rabbitmq:
-  uri: amqp://localhost:5672
+  uri: ${POST_QUEUE_URL:`amqp://post-queue:5672`}

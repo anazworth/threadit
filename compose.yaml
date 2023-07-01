@@ -134,6 +134,18 @@ services:
       - post-queue
     restart: unless-stopped
 
+  feed-api:
+    # build: ./feed_api/
+    image: feed_api:0.1
+    ports:
+      - 8084:8084
+    environment:
+      - FEED_DB_URL=jdbc:mysql://feed-db:3306/posts
+      - FEED_DB_USERNAME=feedservice
+      - FEED_DB_PASSWORD=feedpassword
+      - FEED_CACHE_URL=redis://feed-cache
+      - POST_QUEUE_URL=amqp://post-queue:5672
+
   loadbalancer:
     build: ./loadbalancer/
     volumes:

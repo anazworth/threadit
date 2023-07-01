@@ -30,7 +30,7 @@ async def root():
 async def get_posts():
     return get_posts_db()
 
-@app.post("/api/v1/write/post")
+@app.post("/api/v1/write/post", status_code=201)
 async def write_post(post: Post, request: Request):
 
     userJWT = request.cookies.get('jwtCookie') or request.headers.get('jwtCookie')
