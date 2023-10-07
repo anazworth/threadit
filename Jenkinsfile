@@ -30,6 +30,20 @@ pipeline {
                       }
                   }
                 }
+
+                stage('Krakend Test') {
+                    //when {
+                     //   changeset "Krakend/**"
+                    //}
+                    agent {}
+                        docker {
+                            image 'devopsfaith/krakend:latest'
+                            args '-v /krakend/:/etc/krakend'
+                        }
+                    steps {
+                        check '-tlc krakend.json'
+                    }
+                  }
             }
       }
       stage('Deploy') {
