@@ -32,10 +32,9 @@ pipeline {
                 }
 
                 stage('Krakend Test') {
-                    //when {
-                     //   changeset "Krakend/**"
-                    //}
-                    
+                    when {
+                        changeset "krakend/**"
+                    }
                     steps {
                         sh 'docker run -v krakend:/etc/krakend/ devopsfaith/krakend check -tlc krakend.json'
                     }
