@@ -3,9 +3,17 @@ pipeline {
 
     stages {
       stage('Build') {
-          steps {
-              echo 'Building..'
-          }
+          failFast false
+          parallel {
+              stage('Auth-Service') {
+                  when {
+                      changeset "AuthService/**"
+                  }
+                  steps {
+                      echo 'Building Auth-Service...'
+                  }
+                }
+            }
       }
       stage('Test') {
           steps {
