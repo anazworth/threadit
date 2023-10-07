@@ -1,161 +1,30 @@
 services:
 
   auth-db:
-    image: mariadb:latest
+    image: mariadb:11.1
     environment:
       - MARIADB_ROOT_PASSWORD=rootpassword
       - MARIADB_DATABASE=auth
-      - MARIADB_USER=authservice
-      - MARIADB_PASSWORD=authpasword
-    # ports:
-      # - 3306:3306
-
-  auth-service:
-    build: ./auth_server/auth-service
+      - MARIADB_USER=auth
+      - MARIADB_PASSWORD=password
     ports:
-      - 8080:8080
-    depends_on:
-      - auth-db
+      - 3306:3306
 
-  read-db:
-    image: mongo
-    environment:
-      - MONGO_INITDB_ROOT_USERNAME=readapiadmin
-      - MONGO_INITDB_ROOT_PASSWORD=adminpassword
-    ports:
-      - 27017:27017
-
-  post-cache:
+  auth-cache:
     image: redis/redis-stack
     ports:
       - 6379:6379
-    command: redis-server --requirepass adminpassword --loadmodule /opt/redis-stack/lib/rejson.so
 
-  post-db:
-    image: mysql:8.0.33
-    ports:
-      - 3306:3306
-    environment:
-      - MYSQL_ROOT_PASSWORD=rootpassword
-      - MYSQL_DATABASE=posts
-      - MYSQL_USER=postservice
-      - MYSQL_PASSWORD=postspassword
-
-  post-queue:
-    image: rabbitmq:3-management
-    ports:
-      - 5672:5672
-      - 15672:15672
-    command: rabbitmq-server
-
-  vote-cache:
-    image: redis/redis-stack
-    ports:
-      - 6340:6379
-    command: redis-server --requirepass adminpassword --loadmodule /opt/redis-stack/lib/rejson.so
-
-  votes-db:
-    image: mysql:8.0.33
-    ports:
-      - 3307:3306
-    environment:
-      - MYSQL_ROOT_PASSWORD=rootpassword
-      - MYSQL_DATABASE=votes
-      - MYSQL_USER=voteapi
-      - MYSQL_PASSWORD=votespassword
-
-  feed-db:
-    image: mysql:8.0.33
-    ports:
-      - 3308:3306
-    environment:
-      - MYSQL_ROOT_PASSWORD=rootpassword
-      - MYSQL_DATABASE=posts
-      - MYSQL_USER=feedservice
-      - MYSQL_PASSWORD=feedpassword
-
-  vote-api:
-    build: ./vote_api/
-    ports:
-      - 8083:8083
-    environment:
-      - MYSQL_HOST=votes-db
-      - MYSQL_PORT=3306
-      - MYSQL_USER=voteapi
-      - MYSQL_PASSWORD=votespassword
-      - MYSQL_DATABASE=votes
-      - REDIS_HOST=vote-cache
-      - REDIS_PORT=6379
-      - REDIS_USERNAME=default
-      - REDIS_PASSWORD=adminpassword
-      - JWT_SECRET=thisismydogcurryssecretkeywhydoesitneedtobesolong
-      
-  read-post-api:
-    build: ./read_post_api/
-    ports:
-      - 8081:8081
-    environment:
-      - MONGO_URI=mongodb://readapiadmin:adminpassword@read-db
-      - DB=posts
-      - REDIS_URI=post-cache:6379
-      - REDIS_PASSWORD=adminpassword
-      - QUEUE_URI=post-queue
+  auth-service:
     depends_on:
-      - read-db
-      - post-cache
-      - post-queue
-    restart: unless-stopped
-
-  read-db-helper:
-    image: mongo-express
+      - auth-db
+      - auth-cache
+    image: anazworth/authservice
     ports:
-      - 8082:8081
+      - 8080:8080
     environment:
-      - ME_CONFIG_MONGODB_ADMINUSERNAME=readapiadmin
-      - ME_CONFIG_MONGODB_ADMINPASSWORD=adminpassword
-      - ME_CONFIG_MONGODB_URL=mongodb://readapiadmin:adminpassword@read-db:27017
-    depends_on:
-      - read-db
+      - MARIADB_URL=jdbc:mariadb://auth-db/auth
+      - MARIADB_USERNAME=root
+      - MARIADB_PASSWORD=rootpassword
+      - REDIS_HOST=auth-cache
 
-  write-post-api:
-    build: ./write_post_api/
-    ports: 
-      - 8000:8000
-    environment:
-      - MYSQL_HOST=post-db
-      - MYSQL_USER=postservice
-      - MYSQL_PASSWORD=postspassword
-      - MYSQL_DATABASE=posts
-      - QUEUE_HOST=post-queue
-      - QUEUE_NAME=posts
-      - JWT_SECRET=thisismydogcurryssecretkeywhydoesitneedtobesolong
-    depends_on:
-      - post-db
-      - post-queue
-    restart: unless-stopped
-
-  feed-api:
-    # build: ./feed_api/
-    image: feed_api:0.1
-    ports:
-      - 8084:8084
-    environment:
-      - FEED_DB_URL=jdbc:mysql://feed-db:3306/posts
-      - FEED_DB_USERNAME=feedservice
-      - FEED_DB_PASSWORD=feedpassword
-      - FEED_CACHE_URL=redis://feed-cache
-      - POST_QUEUE_URL=amqp://post-queue:5672
-
-  loadbalancer:
-    build: ./loadbalancer/
-    volumes:
-      - ./loadbalancer/nginx.conf:/etc/nginx/nginx.conf:ro
-    ports:
-      - 8888:80
-    environment:
-      - NGINX_HOST=localhost
-      - NGINX_PORT=80
-    depends_on:
-      - write-post-api
-      - read-post-api
-      - auth-service
