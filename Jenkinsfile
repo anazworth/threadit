@@ -35,7 +35,7 @@ pipeline {
                     //when {
                      //   changeset "Krakend/**"
                     //}
-                    agent {}
+                    agent {
                         docker {
                             image 'devopsfaith/krakend:latest'
                             args '-v /krakend/:/etc/krakend'
