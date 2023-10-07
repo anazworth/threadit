@@ -5,7 +5,7 @@ pipeline {
       stage('Build') {
           failFast false
           parallel {
-              stage('Auth-Service') {
+              stage('Auth-Service Build') {
                   when {
                       changeset "AuthService/**"
                   }
@@ -18,9 +18,19 @@ pipeline {
             }
       }
       stage('Test') {
-          steps {
-              echo 'Testing..'
-          }
+          failFast false
+          parallel {
+              stage('Auth-Service Test') {
+                  when {
+                      changeset "AuthService/**"
+                  }
+                  steps {
+                      dir('AuthService') {
+                        sh './gradlew test'
+                      }
+                  }
+                }
+            }
       }
       stage('Deploy') {
           steps {
