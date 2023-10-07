@@ -40,6 +40,7 @@ pipeline {
                             image 'devopsfaith/krakend:latest'
                             args '-v /krakend/:/etc/krakend'
                         }
+                    }
                     steps {
                         check '-tlc krakend.json'
                     }
