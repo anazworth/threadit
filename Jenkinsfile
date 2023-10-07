@@ -10,7 +10,8 @@ pipeline {
                       changeset "AuthService/**"
                   }
                   steps {
-                      echo 'Building Auth-Service...'
+                      cd 'AuthService'
+                      sh './gradlew build'
                   }
                 }
             }
