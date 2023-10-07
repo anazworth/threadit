@@ -37,7 +37,7 @@ pipeline {
                     //}
                     
                     steps {
-                        sh 'docker run -v /krakend:/etc/krakend/ devopsfaith/krakend check -tlc krakend.json'
+                        sh 'docker run -v krakend:/etc/krakend/ devopsfaith/krakend check -tlc krakend.json'
                     }
                   }
             }
