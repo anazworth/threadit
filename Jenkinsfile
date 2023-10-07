@@ -10,8 +10,9 @@ pipeline {
                       changeset "AuthService/**"
                   }
                   steps {
-                      cd 'AuthService'
-                      sh './gradlew build'
+                      dir('AuthService') {
+                        sh './gradlew build'
+                      }
                   }
                 }
             }
