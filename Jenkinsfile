@@ -48,9 +48,13 @@ pipeline {
                   when {
                       changeset "AuthService/**"
                   }
+                  environment {
+                      DOCKER_REGISTRY = credentials('DockerHub')
+                  }
                   steps {
                       dir('AuthService') {
                         sh './gradlew bootBuildImage --imageName=anazworth/auth-service:latest'
+                        sh 'echo $DOCKER_REGISTRY_PSW | sudo docker login -u $DOCKER_REGISTRY_USR --password-stdin'
                         sh 'docker push anazworth/auth-service:latest'
                       }
                   }
