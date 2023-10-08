@@ -27,7 +27,6 @@ public class UserController {
         this.userSessionRepository = userSessionRepository;
     }
 
-
     @PostMapping("")
     @ResponseStatus(HttpStatus.CREATED)
     public UserDTO createNewUser(@RequestBody User user) {
