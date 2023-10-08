@@ -91,6 +91,23 @@
           "disable_host_sanitize": false
         }
       ]
+    },
+    {
+      "endpoint": "/api/v1/user/sessions/{sessionid}",
+      "method": "DELETE",
+      "output_encoding": "json",
+      "backend": [
+        {
+          "url_pattern": "/api/v1/sessions/{sessionid}",
+          "encoding": "json",
+          "sd": "static",
+          "method": "DELETE",
+          "host": [
+            "http://auth-service:8080"
+          ],
+          "disable_host_sanitize": false
+        }
+      ]
     }
   ]
 }
