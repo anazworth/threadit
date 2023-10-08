@@ -56,6 +56,9 @@
           ],
           "disable_host_sanitize": false
         }
+      ],
+      "input_headers": [
+        "Cookie"
       ]
     },
     {
@@ -73,6 +76,9 @@
           ],
           "disable_host_sanitize": false
         }
+      ],
+      "input_headers": [
+        "Cookie"
       ]
     },
     {
