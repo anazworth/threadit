@@ -20,7 +20,6 @@ public class UserController {
 
     private final UserService userService;
 
-
     private final UserSessionRepository userSessionRepository;
 
     public UserController(UserService userService, UserSessionRepository userSessionRepository) {
