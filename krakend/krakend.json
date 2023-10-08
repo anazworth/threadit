@@ -27,11 +27,14 @@
     {
       "endpoint": "/api/v1/user/login",
       "method": "POST",
-      "output_encoding": "json",
+      "output_encoding": "no-op",
+      "input_headers": [
+        "*"
+      ],
       "backend": [
         {
           "url_pattern": "/api/v1/user/login",
-          "encoding": "json",
+          "encoding": "no-op",
           "sd": "static",
           "method": "POST",
           "host": [
@@ -39,19 +42,20 @@
           ],
           "disable_host_sanitize": false
         }
-      ],
-      "input_headers": [
-        "*"
       ]
     },
     {
       "endpoint": "/api/v1/user/verify",
       "method": "GET",
-      "output_encoding": "json",
+      "output_encoding": "no-op",
+      "input_headers": [
+        "Cookie",
+        "*"
+      ],
       "backend": [
         {
           "url_pattern": "/api/v1/user/verify",
-          "encoding": "json",
+          "encoding": "no-op",
           "sd": "static",
           "method": "GET",
           "host": [
@@ -59,10 +63,6 @@
           ],
           "disable_host_sanitize": false
         }
-      ],
-      "input_headers": [
-        "Cookie",
-        "*"
       ]
     },
     {
