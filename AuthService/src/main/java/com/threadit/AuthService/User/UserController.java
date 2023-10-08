@@ -23,7 +23,6 @@ public class UserController {
 
     private final UserSessionRepository userSessionRepository;
 
-
     public UserController(UserService userService, UserSessionRepository userSessionRepository) {
         this.userService = userService;
         this.userSessionRepository = userSessionRepository;
