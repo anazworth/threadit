@@ -19,7 +19,7 @@ services:
     depends_on:
       - auth-db
       - auth-cache
-    image: anazworth/authservice
+    image: anazworth/auth-service:latest
     ports:
       - 8080:8080
     environment:
