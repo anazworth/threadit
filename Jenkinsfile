@@ -41,9 +41,20 @@ pipeline {
                   }
             }
       }
-      stage('Deploy') {
-          steps {
-              echo 'Deploying....'
+      stage('Push to Registry') {
+          failFast false
+          parallel {
+              stage('Auth-Service Push') {
+                  when {
+                      changeset "AuthService/**"
+                  }
+                  steps {
+                      dir('AuthService') {
+                        sh './gradlew bootBuildImage --imageName=localhost:5000/threadit/auth-service:latest'
+                        sh 'docker push localhost:5000/threadit/auth-service:latest'
+                      }
+                  }
+                }
           }
       }
     }
