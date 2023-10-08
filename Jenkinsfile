@@ -51,7 +51,9 @@ pipeline {
                   steps {
                       dir('AuthService') {
                         sh './gradlew bootBuildImage --imageName=anazworth/auth-service:latest'
-                        sh 'docker push anazworth/auth-service:latest'
+                        docker.withRegistry("docker.io") {
+                          sh 'docker push anazworth/auth-service:latest'
+                        }
                       }
                   }
                 }
