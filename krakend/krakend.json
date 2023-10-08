@@ -39,6 +39,9 @@
           ],
           "disable_host_sanitize": false
         }
+      ],
+      "input_headers": [
+        "*"
       ]
     },
     {
@@ -58,7 +61,8 @@
         }
       ],
       "input_headers": [
-        "Cookie"
+        "Cookie",
+        "*"
       ]
     },
     {
@@ -78,7 +82,8 @@
         }
       ],
       "input_headers": [
-        "Cookie"
+        "Cookie",
+        "*"
       ]
     },
     {
