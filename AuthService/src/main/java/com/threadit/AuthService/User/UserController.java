@@ -106,23 +106,6 @@ public class UserController {
         return ResponseEntity.ok("success");
     }
 
-    @GetMapping("/sessions")
-    public String getSessionUser(HttpServletRequest request) {
-        // get the session id from the bearer token
-        String sessionId = Arrays.stream(request.getCookies())
-                .filter(cookie -> cookie.getName().equals("JSESSIONID"))
-                .findFirst()
-                .get()
-                .getValue();
-
-        // Check if the session is valid
-        if (request.getSession(false) == null) {
-            throw new RuntimeException("Session not found");
-        }
-
-        return "success";
-    }
-
     @GetMapping("/sessions/{username}")
     public Optional<ArrayList<UserSession>> getAllSessionsByUsername(@PathVariable String username) {
         return userSessionRepository.findAllByUsername(username);
