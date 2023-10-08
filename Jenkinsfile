@@ -53,7 +53,8 @@ pipeline {
                         sh './gradlew bootBuildImage --imageName=anazworth/auth-service:latest'
                         script {
                             docker.withRegistry('https://registry.hub.docker.com', 'DockerHub') {
-                                sh 'docker push anazworth/auth-service:latest'
+                                app = docker.image('anazworth/auth-service:latest')
+                                app.push()
                             }
                         }
                       }
