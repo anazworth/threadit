@@ -50,8 +50,8 @@ pipeline {
                   }
                   steps {
                       dir('AuthService') {
-                        sh './gradlew bootBuildImage --imageName=localhost:5000/threadit/auth-service:latest'
-                        sh 'docker push localhost:5000/threadit/auth-service:latest'
+                        sh './gradlew bootBuildImage --imageName=anazworth/auth-service:latest'
+                        sh 'docker push anazworth/auth-service:latest'
                       }
                   }
                 }
