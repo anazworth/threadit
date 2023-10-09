@@ -1,4 +1,7 @@
 # Threadit
+
+***What you see in the main branch is my "rough draft". Check out the dev branch to see what I'm currently up to!***
+
 ## A Reddit-clone created using a microservice architecture.
  
  My goals for this project are to:
