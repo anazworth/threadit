@@ -10,11 +10,11 @@
     {
       "endpoint": "/api/v1/user",
       "method": "POST",
-      "output_encoding": "json",
+      "output_encoding": "no-op",
       "backend": [
         {
           "url_pattern": "/api/v1/user",
-          "encoding": "json",
+          "encoding": "no-op",
           "sd": "static",
           "method": "POST",
           "host": [
@@ -22,6 +22,9 @@
           ],
           "disable_host_sanitize": false
         }
+      ],
+      "input_headers": [
+        "*"
       ]
     },
     {
@@ -89,11 +92,11 @@
     {
       "endpoint": "/api/v1/user/sessions/{username}",
       "method": "GET",
-      "output_encoding": "json",
+      "output_encoding": "no-op",
       "backend": [
         {
           "url_pattern": "/api/v1/user/sessions/{username}",
-          "encoding": "json",
+          "encoding": "no-op",
           "sd": "static",
           "method": "GET",
           "host": [
@@ -101,16 +104,22 @@
           ],
           "disable_host_sanitize": false
         }
+      ],
+      "input_query_strings": [
+        "username"
+      ],
+      "input_headers": [
+        "*"
       ]
     },
     {
       "endpoint": "/api/v1/user/sessions/{sessionid}",
       "method": "DELETE",
-      "output_encoding": "json",
+      "output_encoding": "no-op",
       "backend": [
         {
-          "url_pattern": "/api/v1/sessions/{sessionid}",
-          "encoding": "json",
+          "url_pattern": "/api/v1/user/session/{sessionid}",
+          "encoding": "no-op",
           "sd": "static",
           "method": "DELETE",
           "host": [
@@ -118,6 +127,12 @@
           ],
           "disable_host_sanitize": false
         }
+      ],
+      "input_query_strings": [
+        "sessionid"
+      ],
+      "input_headers": [
+        "*"
       ]
     }
   ],
