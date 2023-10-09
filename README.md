@@ -20,3 +20,7 @@ I am trying to use as many different languages and technologies as possible to g
 ## Architecture diagram
 
 ![Architecture diagram](./diagrams/architecture_diagram.png)
+
+## CI/CD diagram
+
+![CI CD diagram](./diagrams/CICD_Diagram.png)
