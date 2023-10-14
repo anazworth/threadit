@@ -134,6 +134,29 @@
       "input_headers": [
         "*"
       ]
+    },
+    {
+      "endpoint": "/api/v1/user/sessions/verify/{sessionId}",
+      "method": "GET",
+      "output_encoding": "no-op",
+      "backend": [
+        {
+          "url_pattern": "/api/v1/user/sessions/verify/{sessionId}",
+          "encoding": "no-op",
+          "sd": "static",
+          "method": "GET",
+          "host": [
+            "http://auth-service:8080"
+          ],
+          "disable_host_sanitize": false
+        }
+      ],
+      "input_query_strings": [
+        "sessionId"
+      ],
+      "input_headers": [
+        "*"
+      ]
     }
   ],
   "extra_config": {
