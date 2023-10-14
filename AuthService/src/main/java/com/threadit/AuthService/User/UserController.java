@@ -82,6 +82,18 @@ public class UserController {
         }
     }
 
+    @GetMapping("/verify/{sessionId}")
+    public ResponseEntity<?> verifyUser(@PathVariable String sessionId) {
+        try {
+            UserSession userSession = userSessionRepository.findById(sessionId)
+                    .orElseThrow(() -> new Exception("Session not found"));
+
+            return ResponseEntity.ok(userSession.getUsername());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
+        }
+    }
+
     @PostMapping("/logout")
     public ResponseEntity<?> logoutUser(HttpServletRequest request, HttpServletResponse response) {
         // Get the session id from the bearer token
