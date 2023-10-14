@@ -105,8 +105,8 @@ public class UserController {
         return ResponseEntity.ok("success");
     }
 
-    @GetMapping("/sessions/verify/{sessionId}")
-    public ResponseEntity<?> verifyUser(@PathVariable String sessionId) {
+    @GetMapping("/sessions/verify")
+    public ResponseEntity<?> verifyUser(@RequestParam String sessionId) {
         try {
             UserSession userSession = userSessionRepository.findById(sessionId)
                     .orElseThrow(() -> new Exception("Session not found"));
